@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Tarefas</h1>
+        <form action="/add" method="POST">
+            <input type="text" name="task" placeholder="Adicione uma nova tarefa!" required>
+            <button type="submit">Adicionar</button>
+        </form>
+
+        <ul>
+            <% tasks.forEach((task, index) => { %>
+                <li class="<%= task.completed ? 'completed' : '' %>">
+                    <span class="check-circle" onclick="toggleTask(<%= index %>)" style="background-color: <%= task.completed ? 'lightgreen' : 'white' %>;"></span>
+                    <%= task.name %>
+                    <form action="/delete" method="POST" style="display:inline;">
+                        <input type="hidden" name="taskIndex" value="<%= index %>">
+                        <button class="dell" type="submit">Deletar</button>
+                    </form>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <script>
+        function toggleTask(index) {
+            fetch(`/toggle/${index}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
